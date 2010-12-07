@@ -1,5 +1,7 @@
 package Dist::Zilla::Plugin::ReadmeMarkdownFromPod;
-our $VERSION = '0.100700';
+BEGIN {
+  $Dist::Zilla::Plugin::ReadmeMarkdownFromPod::VERSION = '0.103410'; # TRIAL
+}
 
 # ABSTRACT: Automatically convert POD to a README.mkdn for Dist::Zilla
 
@@ -8,15 +10,25 @@ use Moose::Autobox;
 
 with 'Dist::Zilla::Role::InstallTool';
 
+=for Pod::Coverage setup_installer
+
+=cut
+
 sub setup_installer
 {
     my ($self, $arg) = @_;
 
-    use Dist::Zilla::File::InMemory ();
-    use Pod::Markdown ();
+    require Dist::Zilla::File::InMemory;
 
+    my $mmcontent = $self->zilla->main_module->content;
+
+    require Pod::Markdown;
     my $parser = Pod::Markdown->new();
-    $parser->parse_from_file($self->zilla->main_module->name);
+
+    require IO::Scalar;
+    my $input_handle = IO::Scalar->new(\$mmcontent);
+
+    $parser->parse_from_filehandle($input_handle);
     my $content = $parser->as_markdown();
 
     my $file =
@@ -50,7 +62,7 @@ Dist::Zilla::Plugin::ReadmeMarkdownFromPod - Automatically convert POD to a READ
 
 =head1 VERSION
 
-version 0.100700
+version 0.103410
 
 =head1 SYNOPSIS
 

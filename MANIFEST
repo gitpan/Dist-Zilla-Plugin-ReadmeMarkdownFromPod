@@ -6,4 +6,5 @@ README
 dist.ini
 lib/Dist/Zilla/Plugin/ReadmeMarkdownFromPod.pm
 t/00-compile.t
-t/00_compile.t
+t/release-pod-coverage.t
+t/release-pod-syntax.t
