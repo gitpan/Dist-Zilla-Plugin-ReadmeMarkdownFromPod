@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-
+BEGIN { require 5.006; }
 
 use ExtUtils::MakeMaker 6.31;
 
@@ -10,11 +10,15 @@ use ExtUtils::MakeMaker 6.31;
 
 my %WriteMakefileArgs = (
   'ABSTRACT' => 'Automatically convert POD to a README.mkdn for Dist::Zilla',
-  'AUTHOR' => 'Jacob Helwig <jhelwig@cpan.org>',
+  'AUTHOR' => 'Jacob Helwig <jhelwig@cpan.org>, Ryan C. Thompson <rct@thompsonclan.org>',
   'BUILD_REQUIRES' => {
+    'Carp' => '0',
+    'English' => '0',
     'File::Find' => '0',
     'File::Temp' => '0',
-    'Test::More' => '0'
+    'Scalar::Util' => '0',
+    'Test::More' => '0.94',
+    'perl' => '5.004'
   },
   'CONFIGURE_REQUIRES' => {
     'ExtUtils::MakeMaker' => '6.31'
@@ -31,7 +35,7 @@ my %WriteMakefileArgs = (
     'Moose::Autobox' => '0',
     'Pod::Markdown' => '0'
   },
-  'VERSION' => '0.103410',
+  'VERSION' => '0.103510',
   'test' => {
     'TESTS' => 't/*.t'
   }

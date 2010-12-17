@@ -18,7 +18,7 @@ find(
     $found =~ s{^lib/}{};
     $found =~ s{[/\\]}{::}g;
     $found =~ s/\.pm$//;
-    # nothing to skip
+    return if $found =~ /Test$/;
     push @modules, $found;
   },
   'lib',
