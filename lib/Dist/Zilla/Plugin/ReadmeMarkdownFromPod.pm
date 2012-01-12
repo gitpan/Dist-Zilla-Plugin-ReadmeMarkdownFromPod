@@ -1,52 +1,27 @@
 use strict;
 
 package Dist::Zilla::Plugin::ReadmeMarkdownFromPod;
-BEGIN {
-  $Dist::Zilla::Plugin::ReadmeMarkdownFromPod::VERSION = '0.103510';
+{
+  $Dist::Zilla::Plugin::ReadmeMarkdownFromPod::VERSION = '0.120120';
 }
 
 # ABSTRACT: Automatically convert POD to a README.mkdn for Dist::Zilla
 
 use Moose;
-use Moose::Autobox;
+extends 'Dist::Zilla::Plugin::ReadmeAnyFromPod';
 
-with 'Dist::Zilla::Role::InstallTool';
+use Dist::Zilla::Plugin::ReadmeAnyFromPod;
 
+my $config_override = {
+    type => 'markdown',
+    filename => $Dist::Zilla::Plugin::ReadmeAnyFromPod::_types->{markdown}->{filename},
+    location => 'build',
+};
 
-sub setup_installer
-{
-    my ($self) = @_;
-
-    require Dist::Zilla::File::InMemory;
-
-    my $mmcontent = $self->zilla->main_module->content;
-
-    require Pod::Markdown;
-    my $parser = Pod::Markdown->new();
-
-    require IO::Scalar;
-    my $input_handle = IO::Scalar->new(\$mmcontent);
-
-    $parser->parse_from_filehandle($input_handle);
-    my $content = $parser->as_markdown();
-
-    my $file =
-      $self->zilla->files->grep( sub { $_->name =~ m{README.mkdn\z} } )->head;
-    if ($file) {
-        $file->content($content);
-        $self->zilla->log("Override README.mkdn from [ReadmeMarkdownFromPod]");
-    }
-    else {
-        $file = Dist::Zilla::File::InMemory->new(
-            {
-                content => $content,
-                name    => 'README.mkdn',
-            }
-        );
-        $self->add_file($file);
-    }
-
-    return;
+# Override the return values of all the accessors to always return the
+# markdown defaults
+for my $method_name (keys %$config_override) {
+    around $method_name => sub { return $config_override->{$method_name}; }
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -63,7 +38,7 @@ Dist::Zilla::Plugin::ReadmeMarkdownFromPod - Automatically convert POD to a READ
 
 =head1 VERSION
 
-version 0.103510
+version 0.120120
 
 =head1 SYNOPSIS
 
@@ -76,8 +51,6 @@ Generate a README.mkdn from C<main_module> by L<Pod::Markdown>
 
 The code is mostly a copy-paste of L<Dist::Zilla::Plugin::ReadmeFromPod>
 
-=for Pod::Coverage setup_installer
-
 =head1 INSTALLATION
 
 See perlmodinstall for information and options on installing Perl modules.
@@ -88,17 +61,17 @@ See perlmodinstall for information and options on installing Perl modules.
 
 =item *
 
-Jacob Helwig <jhelwig@cpan.org>
+Ryan C. Thompson <rct@thompsonclan.org>
 
 =item *
 
-Ryan C. Thompson <rct@thompsonclan.org>
+Jacob Helwig <jhelwig@cpan.org>
 
 =back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Jacob Helwig.
+This software is copyright (c) 2012 by Jacob Helwig.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
