@@ -11,18 +11,7 @@ use ExtUtils::MakeMaker 6.30;
 my %WriteMakefileArgs = (
   "ABSTRACT" => "Automatically convert POD to a README.mkdn for Dist::Zilla",
   "AUTHOR" => "Ryan C. Thompson <rct\@thompsonclan.org>, Jacob Helwig <jhelwig\@cpan.org>",
-  "BUILD_REQUIRES" => {
-    "Carp" => 0,
-    "English" => 0,
-    "File::Find" => 0,
-    "File::Temp" => 0,
-    "Scalar::Util" => 0,
-    "Test::DZil" => 0,
-    "Test::More" => "0.94",
-    "Test::Most" => 0,
-    "autodie" => 0,
-    "warnings" => 0
-  },
+  "BUILD_REQUIRES" => {},
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "6.30"
   },
@@ -35,24 +24,46 @@ my %WriteMakefileArgs = (
     "Moose" => 0,
     "strict" => 0
   },
-  "VERSION" => "0.120120",
+  "TEST_REQUIRES" => {
+    "Carp" => 0,
+    "File::Spec" => 0,
+    "IO::Handle" => 0,
+    "IPC::Open3" => 0,
+    "Scalar::Util" => 0,
+    "Test::DZil" => 0,
+    "Test::More" => "0.94",
+    "Test::Most" => 0,
+    "autodie" => 0,
+    "warnings" => 0
+  },
+  "VERSION" => "0.141140",
   "test" => {
     "TESTS" => "t/*.t"
   }
 );
 
 
-unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
-  my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
-  my $pp = $WriteMakefileArgs{PREREQ_PM};
-  for my $mod ( keys %$br ) {
-    if ( exists $pp->{$mod} ) {
-      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod};
-    }
-    else {
-      $pp->{$mod} = $br->{$mod};
-    }
-  }
+my %FallbackPrereqs = (
+  "Carp" => 0,
+  "Dist::Zilla::Plugin::ReadmeAnyFromPod" => "0.120120",
+  "File::Spec" => 0,
+  "IO::Handle" => 0,
+  "IPC::Open3" => 0,
+  "Moose" => 0,
+  "Scalar::Util" => 0,
+  "Test::DZil" => 0,
+  "Test::More" => "0.94",
+  "Test::Most" => 0,
+  "autodie" => 0,
+  "strict" => 0,
+  "warnings" => 0
+);
+
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.63_03) } ) {
+  delete $WriteMakefileArgs{TEST_REQUIRES};
+  delete $WriteMakefileArgs{BUILD_REQUIRES};
+  $WriteMakefileArgs{PREREQ_PM} = \%FallbackPrereqs;
 }
 
 delete $WriteMakefileArgs{CONFIGURE_REQUIRES}

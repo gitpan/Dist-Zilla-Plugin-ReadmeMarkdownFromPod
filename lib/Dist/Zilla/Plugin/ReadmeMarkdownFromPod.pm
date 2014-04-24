@@ -2,7 +2,7 @@ use strict;
 
 package Dist::Zilla::Plugin::ReadmeMarkdownFromPod;
 {
-  $Dist::Zilla::Plugin::ReadmeMarkdownFromPod::VERSION = '0.120120';
+  $Dist::Zilla::Plugin::ReadmeMarkdownFromPod::VERSION = '0.141140';
 }
 
 # ABSTRACT: Automatically convert POD to a README.mkdn for Dist::Zilla
@@ -29,6 +29,7 @@ no Moose;
 
 1;
 
+__END__
 
 =pod
 
@@ -38,7 +39,7 @@ Dist::Zilla::Plugin::ReadmeMarkdownFromPod - Automatically convert POD to a READ
 
 =head1 VERSION
 
-version 0.120120
+version 0.141140
 
 =head1 SYNOPSIS
 
@@ -49,7 +50,9 @@ version 0.120120
 
 Generate a README.mkdn from C<main_module> by L<Pod::Markdown>
 
-The code is mostly a copy-paste of L<Dist::Zilla::Plugin::ReadmeFromPod>
+This module has been converted to a wrapper for
+L<Dist::Zilla::Plugin::ReadmeAnyFromPod> with settings that replicate
+the behavior of the old plugin.
 
 =head1 INSTALLATION
 
@@ -71,7 +74,7 @@ Jacob Helwig <jhelwig@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Jacob Helwig.
+This software is copyright (c) 2014 by Jacob Helwig.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
@@ -100,7 +103,3 @@ SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGES.
 
 =cut
-
-
-__END__
-
